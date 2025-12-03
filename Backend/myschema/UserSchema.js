@@ -15,6 +15,14 @@ const UserSchema = new Schema({
     password: {
         type: String,
         required: true
+    },
+    profilePic: {
+        type: String,
+        default: null // stores base64 encoded image data
+    },
+    isHost: {
+        type: Boolean,
+        default: false // false = regular user, true = host
     }
 })
  

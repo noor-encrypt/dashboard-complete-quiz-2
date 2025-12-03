@@ -18,7 +18,9 @@ myRouter.get('/', verifyToken, async (req, res) => {
 
     const userData = {
         regEmail: user_get.regEmail,
-        regName: user_get.regName
+        regName: user_get.regName,
+        profilePic: user_get.profilePic || null,
+        isHost: user_get.isHost || false
     }
 
 

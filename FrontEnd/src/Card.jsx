@@ -1,8 +1,22 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
-function Card({ src, title, description, price }) {
+function Card({ src, title, description, price, homeId, isHome = false }) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    if (isHome && homeId) {
+      navigate(`/home-detail/${homeId}`);
+    }
+  };
+
   return (
-    <div className="rounded-lg overflow-hidden shadow-lg hover:scale-105 transform transition ease-in duration-100 cursor-pointer flex flex-col bg-white">
+    <div
+      onClick={handleClick}
+      className={`rounded-lg overflow-hidden shadow-lg hover:scale-105 transform transition ease-in duration-100 flex flex-col bg-white ${
+        isHome ? "cursor-pointer" : ""
+      }`}
+    >
       <img
         src={src}
         alt={title}

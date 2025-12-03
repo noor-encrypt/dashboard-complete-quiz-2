@@ -10,6 +10,7 @@ import deleteUser from "./myFiles/delete-user.js"
 import updateUser from "./myFiles/update-user.js"
 import servicesRouter from "./myFiles/services.js"
 import homesRouter from "./myFiles/homes.js"
+import bookingsRouter from "./myFiles/bookings.js"
 import express from "express"
 
 //adding package that will allow communication with frontend
@@ -38,6 +39,8 @@ app.use('/user/update-user', updateUser);
 app.use('/services', servicesRouter);
 //route for homes
 app.use('/homes', homesRouter);
+//route for bookings
+app.use('/bookings', bookingsRouter);
 const port = 5000
 
 app.listen(port);

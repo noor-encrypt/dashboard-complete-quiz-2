@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { ArrowLeft, MapPin, Users, Bed, Bath, Heart, Share2, ChevronLeft, ChevronRight, Mail, Phone } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
+import BookingModal from "./BookingModal";
 
 export default function HomeDetailPage() {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ export default function HomeDetailPage() {
   const [error, setError] = useState("");
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isSaved, setIsSaved] = useState(false);
+  const [showBookingModal, setShowBookingModal] = useState(false);
 
   useEffect(() => {
     fetchHomeDetails();
@@ -337,7 +339,7 @@ export default function HomeDetailPage() {
 
               {/* Book Button */}
               <button
-                onClick={() => alert("Booking system coming soon!")}
+                onClick={() => setShowBookingModal(true)}
                 className="w-full bg-[#FF385C] text-white py-3 rounded-lg font-semibold hover:bg-[#e0314f] transition"
               >
                 Reserve
@@ -362,6 +364,20 @@ export default function HomeDetailPage() {
       <footer className="bg-white text-center py-5 text-gray-500 border-t mt-12">
         © {new Date().getFullYear()} Airbnb Clone | All Rights Reserved
       </footer>
+
+      {/* Booking Modal */}
+      {showBookingModal && (
+        <BookingModal 
+          property={home} 
+          propertyType="home"
+          onClose={() => setShowBookingModal(false)}
+          onSuccess={() => {
+            setShowBookingModal(false);
+            navigate("/my-bookings");
+          }}
+        />
+      )}
     </div>
   );
 }
+

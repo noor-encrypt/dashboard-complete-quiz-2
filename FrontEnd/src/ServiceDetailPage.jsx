@@ -12,6 +12,7 @@ import {
   Heart,
   Share2,
 } from "lucide-react";
+import BookingModal from "./BookingModal";
 
 export default function ServiceDetailPage() {
   const { serviceId } = useParams();
@@ -20,6 +21,7 @@ export default function ServiceDetailPage() {
   const [loading, setLoading] = useState(true);
   const [mainImage, setMainImage] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [showBookingModal, setShowBookingModal] = useState(false);
 
   useEffect(() => {
     const fetchService = async () => {
@@ -131,7 +133,9 @@ export default function ServiceDetailPage() {
               </p>
             </div>
 
-            <button className="w-full bg-[#FF385C] text-white py-3 rounded-lg font-semibold hover:bg-[#e0314f] transition mb-3">
+            <button 
+              onClick={() => setShowBookingModal(true)}
+              className="w-full bg-[#FF385C] text-white py-3 rounded-lg font-semibold hover:bg-[#e0314f] transition mb-3">
               Book Now
             </button>
 
@@ -254,6 +258,19 @@ export default function ServiceDetailPage() {
           </p>
         </div>
       </div>
+
+      {/* Booking Modal */}
+      {showBookingModal && (
+        <BookingModal 
+          property={service} 
+          propertyType="service"
+          onClose={() => setShowBookingModal(false)}
+          onSuccess={() => {
+            setShowBookingModal(false);
+            navigate("/my-bookings");
+          }}
+        />
+      )}
     </div>
   );
 }

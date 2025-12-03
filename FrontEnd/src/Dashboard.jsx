@@ -228,56 +228,80 @@ export default function Dashboard() {
 
         {/* Dashboard Grid */}
         <div className="w-full max-w-6xl">
-          <h3 className="text-2xl font-bold text-gray-800 mb-8">Quick Access</h3>
+          <h3 className="text-3xl font-bold mb-10 bg-gradient-to-r from-[#FF385C] to-[#FF4D6D] bg-clip-text text-transparent">
+            🚀 Quick Access
+          </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
             {/* Home */}
-            <div className="bg-white rounded-2xl shadow-md p-8 text-center hover:shadow-xl hover:-translate-y-1 transition transform">
-              <div className="flex justify-center mb-4">
-                <div className="bg-red-50 p-4 rounded-full">
+            <div className="bg-white rounded-2xl shadow-md p-8 text-center hover:shadow-2xl hover:-translate-y-2 transition transform group border-l-4 border-[#FF385C]">
+              <div className="flex justify-center mb-6">
+                <div className="bg-gradient-to-br from-[#FFE4E8] to-[#FFD0D8] p-5 rounded-full group-hover:scale-110 transition">
                   <Home className="text-[#FF385C]" size={40} />
                 </div>
               </div>
-              <h3 className="text-xl font-semibold text-gray-800">Home</h3>
-              <p className="text-gray-500 mt-2 mb-4">Go to homepage.</p>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">🏠 Home</h3>
+              <p className="text-gray-600 mt-2 mb-6 text-sm">Explore amazing places to stay</p>
               <Link
                 to="/"
-                className="inline-block bg-[#FF385C] text-white px-6 py-2 rounded-full hover:bg-[#e0314f] transition font-semibold"
+                className="inline-block bg-gradient-to-r from-[#FF385C] to-[#FF4D6D] text-white px-6 py-2 rounded-full hover:shadow-lg transition font-bold"
               >
-                Visit
+                Visit Home
               </Link>
             </div>
 
             {/* Services */}
-            <div className="bg-white rounded-2xl shadow-md p-8 text-center hover:shadow-xl hover:-translate-y-1 transition transform">
-              <div className="flex justify-center mb-4">
-                <div className="bg-blue-50 p-4 rounded-full">
+            <div className="bg-white rounded-2xl shadow-md p-8 text-center hover:shadow-2xl hover:-translate-y-2 transition transform group border-l-4 border-blue-500">
+              <div className="flex justify-center mb-6">
+                <div className="bg-blue-50 p-5 rounded-full group-hover:scale-110 transition">
                   <BedDouble className="text-blue-500" size={40} />
                 </div>
               </div>
-              <h3 className="text-xl font-semibold text-gray-800">Our Services</h3>
-              <p className="text-gray-500 mt-2 mb-4">Explore booking services.</p>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">⭐ Services</h3>
+              <p className="text-gray-600 mt-2 mb-6 text-sm">Book professional services</p>
               <Link
                 to="/services"
-                className="inline-block bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 transition font-semibold"
+                className="inline-block bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 hover:shadow-lg transition font-bold"
+              >
+                Browse
+              </Link>
+            </div>
+
+            {/* Bookings */}
+            <div className="bg-white rounded-2xl shadow-md p-8 text-center hover:shadow-2xl hover:-translate-y-2 transition transform group border-l-4 border-green-500">
+              <div className="flex justify-center mb-6">
+                <div className="bg-green-50 p-5 rounded-full group-hover:scale-110 transition">
+                  <ClipboardList className="text-green-500" size={40} />
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-gray-800 mb-2">📅 My Bookings</h3>
+              <p className="text-gray-600 mt-2 mb-6 text-sm">Track your reservations</p>
+              <Link
+                to="/my-bookings"
+                className="inline-block bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600 hover:shadow-lg transition font-bold"
               >
                 View
               </Link>
             </div>
 
-            {/* Bookings */}
-            <div className="bg-white rounded-2xl shadow-md p-8 text-center hover:shadow-xl hover:-translate-y-1 transition transform">
-              <div className="flex justify-center mb-4">
-                <div className="bg-green-50 p-4 rounded-full">
-                  <ClipboardList className="text-green-500" size={40} />
+            {/* Host Bookings - Only for hosts */}
+            {isHost && (
+              <div className="bg-white rounded-2xl shadow-md p-8 text-center hover:shadow-xl hover:-translate-y-1 transition transform">
+                <div className="flex justify-center mb-4">
+                  <div className="bg-indigo-50 p-4 rounded-full">
+                    <ClipboardList className="text-indigo-500" size={40} />
+                  </div>
                 </div>
+                <h3 className="text-xl font-semibold text-gray-800">Booking Requests</h3>
+                <p className="text-gray-500 mt-2 mb-4">Manage guest bookings.</p>
+                <Link
+                  to="/host-bookings"
+                  className="inline-block bg-indigo-500 text-white px-6 py-2 rounded-full hover:bg-indigo-600 transition font-semibold"
+                >
+                  Manage
+                </Link>
               </div>
-              <h3 className="text-xl font-semibold text-gray-800">Bookings</h3>
-              <p className="text-gray-500 mt-2 mb-4">Manage your bookings.</p>
-              <button className="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600 transition font-semibold">
-                Manage
-              </button>
-            </div>
+            )}
 
             {/* About */}
             <div className="bg-white rounded-2xl shadow-md p-8 text-center hover:shadow-xl hover:-translate-y-1 transition transform">

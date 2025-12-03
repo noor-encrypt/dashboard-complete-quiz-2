@@ -113,7 +113,7 @@ myRouter.get('/home/:homeId', async (req, res) => {
 
         res.json({
             success: true,
-            home: home
+            data: home
         })
     }
     catch (error) {

@@ -99,7 +99,7 @@ function Home() {
                   src={home.images && home.images.length > 0 ? home.images[0] : "https://via.placeholder.com/500x400"}
                   title={home.title}
                   description={home.description}
-                  price={`$${home.price}/night`}
+                  price={home.price}
                   homeId={home._id}
                   isHome={true}
                 />
@@ -117,7 +117,7 @@ function Home() {
                     src={home.images && home.images.length > 0 ? home.images[0] : "https://via.placeholder.com/500x400"}
                     title={home.title}
                     description={home.description}
-                    price={`$${home.price}/night`}
+                    price={home.price}
                     homeId={home._id}
                     isHome={true}
                   />

@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import SearchResult from "./SearchResult";
+import { MapPin, DollarSign, Calendar, Users, Bed } from "lucide-react";
 
 function SearchPage() {
   const [homes, setHomes] = useState([]);
   const [filteredHomes, setFilteredHomes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
+    location: "",
     minPrice: 0,
-    maxPrice: 1000,
+    maxPrice: 10000,
     bedrooms: 0,
     guests: 0,
+    checkIn: "",
+    checkOut: "",
   });
 
   useEffect(() => {
@@ -18,17 +22,27 @@ function SearchPage() {
   }, []);
 
   useEffect(() => {
-    applyFilters();
+    if (homes.length > 0) {
+      applyFilters();
+    }
   }, [homes, filters]);
 
   const fetchHomes = async () => {
     try {
       const response = await fetch("http://localhost:5000/homes/all-homes");
       const result = await response.json();
+      
+      console.log("Full response:", result);
+      console.log("Homes from backend:", result.homes);
 
-      if (result.success && result.homes) {
+      if (result.success && result.homes && Array.isArray(result.homes)) {
+        console.log("Setting homes, count:", result.homes.length);
         setHomes(result.homes);
-        setFilteredHomes(result.homes);
+        setFilteredHomes(result.homes); // Initially show all homes
+      } else {
+        console.warn("No homes data in response or unexpected format");
+        setHomes([]);
+        setFilteredHomes([]);
       }
     } catch (err) {
       console.error("Error fetching homes:", err);
@@ -46,7 +60,11 @@ function SearchPage() {
       const bedroomMatch =
         filters.bedrooms === 0 || home.bedrooms >= filters.bedrooms;
       const guestMatch = filters.guests === 0 || home.guests >= filters.guests;
-      return priceMatch && bedroomMatch && guestMatch;
+      const locationMatch =
+        !filters.location || 
+        home.location.toLowerCase().includes(filters.location.toLowerCase());
+      
+      return priceMatch && bedroomMatch && guestMatch && locationMatch;
     });
     setFilteredHomes(filtered);
   };
@@ -58,138 +76,194 @@ function SearchPage() {
     }));
   };
 
-  const defaultResults = [
-    {
-      img: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQ_wbPYTxQPMcBh7SPzLFActXnP3uhifeVT_g&usqp=CAU",
-      location: "Private room in center of London",
-      title: "Stay at this spacious Edwardian House",
-      description: "1 guest · 1 bedroom · 1 bed · 1.5 shared bthrooms · Wifi · Kitchen · Free parking · Washing Machine",
-      star: 4.73,
-      price: "£30 / night",
-      total: "£117 total",
-    },
-    {
-      img: "https://a0.muscache.com/im/pictures/15159c9c-9cf1-400e-b809-4e13f286fa38.jpg?im_w=720",
-      location: "Private room in center of London",
-      title: "Independant luxury studio apartment",
-      description: "2 guest · 3 bedroom · 1 bed · 1.5 shared bthrooms · Wifi · Kitchen",
-      star: 4.3,
-      price: "£40 / night",
-      total: "£157 total",
-    },
-    {
-      img: "https://www.smartertravel.com/uploads/2017/07/Untitled-design-8.jpg",
-      location: "Private room in center of London",
-      title: "London Studio Apartments",
-      description: "4 guest · 4 bedroom · 4 bed · 2 bathrooms · Free parking · Washing Machine",
-      star: 3.8,
-      price: "£35 / night",
-      total: "£207 total",
-    },
-  ];
+  const clearFilters = () => {
+    setFilters({
+      location: "",
+      minPrice: 0,
+      maxPrice: 10000,
+      bedrooms: 0,
+      guests: 0,
+      checkIn: "",
+      checkOut: "",
+    });
+  };
 
   const displayResults =
-    filteredHomes && filteredHomes.length > 0 ? filteredHomes : defaultResults;
+    filteredHomes && filteredHomes.length > 0 ? filteredHomes : [];
 
   return (
     <div className="searchPage">
-      {/* Info Section */}
-      <div className="p-5">
-        <p className="mb-[10px] text-[14px]">
-          {displayResults.length} homes · Your destination
-        </p>
-        <h1 className="mb-[30px] text-2xl font-semibold">Stays nearby</h1>
+      {/* Filters Section */}
+      <div className="bg-white border-b border-gray-200 p-4 sticky top-0 z-40 shadow-sm">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+          {/* Location Filter */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              <MapPin size={14} className="inline mr-1" /> Location
+            </label>
+            <input
+              type="text"
+              placeholder="Search location..."
+              value={filters.location}
+              onChange={(e) => handleFilterChange("location", e.target.value)}
+              className="w-full px-3 py-2 rounded border border-gray-300 text-gray-800 text-sm focus:outline-none focus:ring-1 focus:ring-[#FF385C] focus:border-[#FF385C]"
+            />
+          </div>
 
-        {/* Filter Buttons */}
-        <div className="mb-5 space-y-3">
-          <div className="flex gap-2 flex-wrap">
+          {/* Price Range */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              <DollarSign size={14} className="inline mr-1" /> Min Price
+            </label>
             <select
-              onChange={(e) =>
-                handleFilterChange("minPrice", parseInt(e.target.value) || 0)
-              }
-              className="px-4 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-[#FF385C]"
+              value={filters.minPrice}
+              onChange={(e) => handleFilterChange("minPrice", parseInt(e.target.value) || 0)}
+              className="w-full px-3 py-2 rounded border border-gray-300 text-gray-800 text-sm focus:outline-none focus:ring-1 focus:ring-[#FF385C] focus:border-[#FF385C]"
             >
-              <option value="0">Min Price: Any</option>
-              <option value="30">Min: £30</option>
-              <option value="50">Min: £50</option>
-              <option value="100">Min: £100</option>
+              <option value="0">Any</option>
+              <option value="30">$30+</option>
+              <option value="50">$50+</option>
+              <option value="100">$100+</option>
+              <option value="200">$200+</option>
             </select>
+          </div>
 
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              <DollarSign size={14} className="inline mr-1" /> Max Price
+            </label>
             <select
-              onChange={(e) =>
-                handleFilterChange("maxPrice", parseInt(e.target.value) || 1000)
-              }
-              className="px-4 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-[#FF385C]"
+              value={filters.maxPrice}
+              onChange={(e) => handleFilterChange("maxPrice", parseInt(e.target.value) || 10000)}
+              className="w-full px-3 py-2 rounded border border-gray-300 text-gray-800 text-sm focus:outline-none focus:ring-1 focus:ring-[#FF385C] focus:border-[#FF385C]"
             >
-              <option value="1000">Max Price: Any</option>
-              <option value="50">Max: £50</option>
-              <option value="100">Max: £100</option>
-              <option value="200">Max: £200</option>
+              <option value="10000">Any</option>
+              <option value="50">Up to $50</option>
+              <option value="100">Up to $100</option>
+              <option value="200">Up to $200</option>
+              <option value="500">Up to $500</option>
+              <option value="1000">Up to $1000</option>
             </select>
+          </div>
 
+          {/* Bedrooms */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              <Bed size={14} className="inline mr-1" /> Bedrooms
+            </label>
             <select
-              onChange={(e) =>
-                handleFilterChange("bedrooms", parseInt(e.target.value) || 0)
-              }
-              className="px-4 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-[#FF385C]"
+              value={filters.bedrooms}
+              onChange={(e) => handleFilterChange("bedrooms", parseInt(e.target.value) || 0)}
+              className="w-full px-3 py-2 rounded border border-gray-300 text-gray-800 text-sm focus:outline-none focus:ring-1 focus:ring-[#FF385C] focus:border-[#FF385C]"
             >
-              <option value="0">Bedrooms: Any</option>
-              <option value="1">Min: 1 Bedroom</option>
-              <option value="2">Min: 2 Bedrooms</option>
-              <option value="3">Min: 3 Bedrooms</option>
+              <option value="0">Any</option>
+              <option value="1">1+</option>
+              <option value="2">2+</option>
+              <option value="3">3+</option>
+              <option value="4">4+</option>
             </select>
+          </div>
 
+          {/* Guests */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              <Users size={14} className="inline mr-1" /> Guests
+            </label>
             <select
-              onChange={(e) =>
-                handleFilterChange("guests", parseInt(e.target.value) || 0)
-              }
-              className="px-4 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-[#FF385C]"
+              value={filters.guests}
+              onChange={(e) => handleFilterChange("guests", parseInt(e.target.value) || 0)}
+              className="w-full px-3 py-2 rounded border border-gray-300 text-gray-800 text-sm focus:outline-none focus:ring-1 focus:ring-[#FF385C] focus:border-[#FF385C]"
             >
-              <option value="0">Guests: Any</option>
-              <option value="1">1+ Guests</option>
-              <option value="2">2+ Guests</option>
-              <option value="4">4+ Guests</option>
+              <option value="0">Any</option>
+              <option value="1">1+</option>
+              <option value="2">2+</option>
+              <option value="4">4+</option>
+              <option value="6">6+</option>
+              <option value="8">8+</option>
             </select>
+          </div>
+
+          {/* Check-in Date */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              <Calendar size={14} className="inline mr-1" /> Check-in
+            </label>
+            <input
+              type="date"
+              value={filters.checkIn}
+              onChange={(e) => handleFilterChange("checkIn", e.target.value)}
+              className="w-full px-3 py-2 rounded border border-gray-300 text-gray-800 text-sm focus:outline-none focus:ring-1 focus:ring-[#FF385C] focus:border-[#FF385C]"
+            />
+          </div>
+
+          {/* Check-out Date */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              <Calendar size={14} className="inline mr-1" /> Check-out
+            </label>
+            <input
+              type="date"
+              value={filters.checkOut}
+              onChange={(e) => handleFilterChange("checkOut", e.target.value)}
+              className="w-full px-3 py-2 rounded border border-gray-300 text-gray-800 text-sm focus:outline-none focus:ring-1 focus:ring-[#FF385C] focus:border-[#FF385C]"
+            />
+          </div>
+
+          {/* Clear Button */}
+          <div className="flex items-end">
+            <button
+              onClick={clearFilters}
+              className="w-full bg-[#FF385C] text-white px-4 py-2 rounded font-semibold hover:bg-[#e0314f] transition text-sm"
+            >
+              Clear Filters
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Loading State */}
-      {loading && (
-        <div className="flex justify-center items-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF385C]"></div>
-        </div>
-      )}
+      {/* Info Section */}
+      <div className="p-5">
+        <p className="mb-[10px] text-[14px]">
+          {displayResults.length} homes · Your search
+        </p>
+        <h1 className="mb-[30px] text-2xl font-semibold">Available Stays</h1>
 
-      {/* Search Results */}
-      {!loading && displayResults.length > 0 ? (
-        displayResults.map((result, idx) => (
-          <SearchResult
-            key={idx}
-            img={
-              result.images && result.images.length > 0
-                ? result.images[0]
-                : result.img
-            }
-            location={result.location || `${result.location || "London, UK"}`}
-            title={result.title}
-            description={
-              result.description ||
-              `${result.bedrooms} bedrooms · ${result.bathrooms} bathrooms · ${result.guests} guests`
-            }
-            star={result.star || 4.5}
-            price={result.price || `£${result.price}/night`}
-            total={result.total || `£${result.price * 3} total`}
-            homeId={result._id}
-          />
-        ))
-      ) : (
-        !loading && (
-          <div className="p-5 text-center text-gray-600">
-            No homes found matching your filters
+        {/* Loading State */}
+        {loading && (
+          <div className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF385C]"></div>
           </div>
-        )
-      )}
+        )}
+
+        {/* Search Results */}
+        {!loading && displayResults.length > 0 ? (
+          displayResults.map((result, idx) => (
+            <SearchResult
+              key={idx}
+              img={
+                result.images && result.images.length > 0
+                  ? result.images[0]
+                  : "https://via.placeholder.com/500x400"
+              }
+              location={result.location}
+              title={result.title}
+              description={result.description}
+              star={4.5}
+              price={`£${result.price}/night`}
+              total={`£${result.price * 3} total`}
+              homeId={result._id}
+            />
+          ))
+        ) : (
+          !loading && (
+            <div className="p-5 text-center text-gray-600">
+              No homes found matching your filters
+            </div>
+          )
+        )}
+      </div>
     </div>
   );
 }
+
+export default SearchPage;

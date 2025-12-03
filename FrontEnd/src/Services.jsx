@@ -79,14 +79,18 @@ const Services = () => {
   }, []);
 
   return (
-    <div className="px-[2rem] max-w-[1200px] mx-auto font-[Helvetica Neue,sans-serif]">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white font-[Helvetica Neue,sans-serif]">
       {/* Hero Section */}
-      <section className="text-center mb-[3rem] mt-[3rem]">
-        <h1 className="text-[2.5rem] mb-[1rem]">Airbnb Services</h1>
-        <p className="text-[1.125rem] text-[#555]">
-          Book professional services for your stay or home—chefs, spa, trainers, beauty, and more.
+      <section className="bg-gradient-to-r from-[#FF385C] via-[#FF4D6D] to-[#FF385C] py-16 px-6 text-center mb-12">
+        <h1 className="text-5xl font-bold text-white mb-4 drop-shadow-lg">
+          🎯 Professional Services
+        </h1>
+        <p className="text-xl text-white text-opacity-90 max-w-2xl mx-auto drop-shadow">
+          Book expert services from verified professionals—photography, cooking, training, and more
         </p>
       </section>
+
+      <div className="px-[2rem] max-w-[1200px] mx-auto">
 
       {/* Loading */}
       {loading ? (
@@ -108,27 +112,37 @@ const Services = () => {
               <div
                 key={service._id}
                 onClick={() => navigate(`/service-detail/${service._id}`)}
-                className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all cursor-pointer transform hover:-translate-y-1 border border-gray-100"
+                className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-2xl transition-all cursor-pointer transform hover:-translate-y-2 border border-gray-100 group"
               >
-                {/* Service Image */}
-                <div className="relative overflow-hidden w-full h-56 bg-gray-200">
+                {/* Service Image Container */}
+                <div className="relative overflow-hidden w-full h-56 bg-gradient-to-br from-gray-200 to-gray-300">
                   {service.images && service.images.length > 0 ? (
-                    <img
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                      src={service.images[0]}
-                      alt={service.title}
-                    />
+                    <div className="relative h-full overflow-hidden">
+                      <img
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        src={service.images[0]}
+                        alt={service.title}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    </div>
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gray-300 text-gray-500">
-                      No image
+                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-300 to-gray-400 text-gray-500">
+                      <span className="text-center">
+                        <p className="text-2xl mb-2">📷</p>
+                        No image
+                      </span>
                     </div>
                   )}
+                  {/* Badge */}
+                  <div className="absolute top-3 right-3 bg-[#FF385C] text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
+                    ${service.price}
+                  </div>
                 </div>
 
                 {/* Service Content */}
-                <div className="p-4">
+                <div className="p-5">
                   {/* Title */}
-                  <h3 className="mb-2 text-lg font-semibold text-gray-800 truncate">
+                  <h3 className="mb-2 text-lg font-bold text-gray-800 truncate group-hover:text-[#FF385C] transition">
                     {service.title}
                   </h3>
 
@@ -139,40 +153,35 @@ const Services = () => {
 
                   {/* Location */}
                   <div className="flex items-center gap-2 text-gray-700 mb-3 text-sm">
-                    <MapPin size={16} className="text-[#FF385C] flex-shrink-0" />
+                    <span className="text-lg">📍</span>
                     <span className="truncate">{service.location}</span>
                   </div>
 
                   {/* Amenities Preview */}
                   {service.amenities && service.amenities.length > 0 && (
-                    <div className="mb-3 flex gap-2 flex-wrap">
+                    <div className="mb-4 flex gap-2 flex-wrap">
                       {service.amenities.slice(0, 2).map((amenity, idx) => (
                         <span
                           key={idx}
-                          className="text-xs bg-[#FFE4E8] text-[#FF385C] px-2 py-1 rounded-full font-medium"
+                          className="text-xs bg-gradient-to-r from-[#FFE4E8] to-[#FFD0D8] text-[#FF385C] px-2.5 py-1 rounded-full font-semibold"
                         >
-                          {amenity}
+                          ✓ {amenity}
                         </span>
                       ))}
                       {service.amenities.length > 2 && (
-                        <span className="text-xs text-gray-500 px-2 py-1">
-                          +{service.amenities.length - 2}
+                        <span className="text-xs text-gray-500 px-2 py-1 font-medium">
+                          +{service.amenities.length - 2} more
                         </span>
                       )}
                     </div>
                   )}
 
-                  {/* Footer - Price and Host */}
-                  <div className="pt-3 border-t border-gray-200 flex justify-between items-center">
-                    <div className="flex items-center gap-1">
-                      <DollarSign size={16} className="text-green-600" />
-                      <span className="font-semibold text-gray-800">
-                        ${service.price}
-                      </span>
-                    </div>
-                    <span className="text-xs text-gray-500 text-right max-w-[100px] truncate">
+                  {/* Footer - Host */}
+                  <div className="pt-3 border-t border-gray-200">
+                    <p className="text-xs text-gray-600 mb-2">by</p>
+                    <p className="text-sm font-semibold text-gray-800 truncate group-hover:text-[#FF385C] transition">
                       {service.hostName}
-                    </span>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -180,15 +189,17 @@ const Services = () => {
           </section>
         </>
       )}
+      </div>
 
       {/* CTA Section */}
-      <section className="text-center mt-12 mb-12 py-8">
-        <h2 className="text-3xl mb-4 font-bold text-gray-800">Ready to share your services?</h2>
+      <section className="text-center mt-16 mb-16 py-12 bg-gradient-to-r from-[#FF385C] to-[#FF4D6D] rounded-2xl mx-6">
+        <h2 className="text-4xl font-bold text-white mb-4">Ready to share your services?</h2>
+        <p className="text-lg text-white text-opacity-90 mb-6">Become a host and start earning today</p>
         <button
           onClick={() => navigate("/dashboard")}
-          className="bg-[#FF385C] hover:bg-[#e0314f] text-white px-6 py-3 rounded-lg font-semibold transition transform hover:scale-105"
+          className="bg-white text-[#FF385C] hover:bg-gray-100 text-lg px-8 py-3 rounded-xl font-bold transition transform hover:scale-105 shadow-lg"
         >
-          Become a Host
+          Become a Host →
         </button>
       </section>
     </div>

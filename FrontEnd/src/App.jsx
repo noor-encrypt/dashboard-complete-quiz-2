@@ -17,6 +17,8 @@ import AddService from "./AddService";
 import AddHome from "./AddHome";
 import HomeDetailPage from "./HomeDetailPage";
 import ServiceDetail from "./DetailedServices"; // adjust path if needed
+import MyBookings from "./MyBookings";
+import HostBookings from "./HostBookings";
 
 
 // ✅ Wrapper component to access location
@@ -24,7 +26,7 @@ function AppWrapper() {
   const location = useLocation();
 
   // Paths where we DON'T want Header/Footer
-  const hideHeaderFooter = ["/login", "/dashboard", "/signup", "/edit-profile", "/host-dashboard", "/add-service", "/add-home", "/service-detail", "/home-detail"];
+  const hideHeaderFooter = ["/login", "/dashboard", "/signup", "/edit-profile", "/host-dashboard", "/add-service", "/add-home", "/service-detail", "/home-detail", "/my-bookings", "/host-bookings"];
 
   const hideLayout = hideHeaderFooter.some(path => location.pathname.startsWith(path));
 
@@ -47,6 +49,8 @@ function AppWrapper() {
         <Route path="/add-service" element={<AddService />} />
         <Route path="/add-home" element={<AddHome />} />
         <Route path="/home-detail/:homeId" element={<HomeDetailPage />} />
+        <Route path="/my-bookings" element={<MyBookings />} />
+        <Route path="/host-bookings" element={<HostBookings />} />
       </Routes>
       {!hideLayout && <Footer />}
     </>

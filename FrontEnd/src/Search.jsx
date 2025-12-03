@@ -23,7 +23,7 @@ function Search() {
   }
   
   return (
-    <div className="flex flex-col items-center gap-6 p-6 bg-white shadow-lg rounded-2xl w-[600px] mx-auto mt-10">
+    <div className="flex flex-col items-center gap-6 p-6 bg-white shadow-lg rounded-2xl w-[600px] mx-auto mt-10 relative z-50">
       {/* Calendar */}
       <DateRangePicker ranges={[selectionRange]} onChange={handleSelect} />
 
